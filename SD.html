@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SHUTTERDOME®</title>
+    <link href="https://fonts.googleapis.com/css2?family=D-DIN:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/garret" rel="stylesheet">
+    <style>
+        :root {
+            --spacex-black: #000000;
+            --spacex-white: #ffffff;
+            --spacex-gray: #979797;
+            --spacex-red: #ff0000;
+            --spacex-dark: #1a1a1a;
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --container-bg: rgba(26, 26, 26, 0.7);
+            --input-bg: rgba(0, 0, 0, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --heading-color: #ffffff;
+            --secondary-text: #979797;
+            --gradient-start: rgba(255, 0, 0, 0.1);
+            --gradient-end: rgba(255, 0, 0, 0.05);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --container-bg: rgba(255, 255, 255, 0.7);
+            --input-bg: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --heading-color: #000000;
+            --secondary-text: #666666;
+            --gradient-start: rgba(255, 0, 0, 0.05);
+            --gradient-end: rgba(255, 0, 0, 0.02);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Garret', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            line-height: 1.6;
+            background-image: 
+                linear-gradient(45deg, var(--bg-color), var(--container-bg)),
+                radial-gradient(circle at top right, var(--gradient-start), transparent 50%),
+                radial-gradient(circle at bottom left, var(--gradient-end), transparent 50%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="%23ffffff" opacity="0.05"/></svg>');
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--container-bg), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .nav-bar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        .logo {
+            font-size: 2rem;
+            color: var(--spacex-red);
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--spacex-red);
+            transition: width 0.3s ease;
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--heading-color);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+        }
+
+        .nav-link:hover {
+            color: var(--spacex-red);
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .chat-container, .profile-container {
+            background: linear-gradient(135deg, var(--container-bg), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .chat-container:hover, .profile-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        .chat-container::before, .profile-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--spacex-red), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        input {
+            background: linear-gradient(135deg, var(--input-bg), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            color: var(--text-color);
+            font-family: 'Garret', sans-serif;
+            outline: none;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        input:focus {
+            border-color: var(--spacex-red);
+            box-shadow: 0 4px 20px 0 rgba(255, 0, 0, 0.2);
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--spacex-red), #cc0000);
+            color: var(--spacex-white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            box-shadow: 0 4px 16px 0 rgba(255, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(255, 0, 0, 0.3);
+        }
+
+        .profile-container {
+            animation: fadeIn 0.5s ease-out;
+            animation-delay: 0.2s;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+            border: 3px solid var(--spacex-red);
+            padding: 3px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px 0 rgba(255, 0, 0, 0.2);
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 24px 0 rgba(255, 0, 0, 0.3);
+        }
+
+        .profile-header h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--heading-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .profile-header p {
+            color: var(--secondary-text);
+            font-size: 1.1rem;
+        }
+
+        .social-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .social-link {
+            background: linear-gradient(135deg, var(--container-bg), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--heading-color);
+            text-align: center;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .social-link:hover {
+            border-color: var(--spacex-red);
+            color: var(--spacex-red);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(255, 0, 0, 0.2);
+        }
+
+        .company-container {
+            background-color: var(--container-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .company-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--spacex-red), transparent);
+        }
+
+        .company-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .company-header h2 {
+            font-size: 2.5rem;
+            color: var(--spacex-white);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .company-header p {
+            color: var(--spacex-gray);
+            font-size: 1.2rem;
+        }
+
+        .founder-section {
+            background-color: var(--container-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .founder-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 2px solid var(--spacex-red);
+            padding: 2px;
+        }
+
+        .founder-info {
+            flex: 1;
+        }
+
+        .founder-info h3 {
+            color: var(--spacex-white);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .founder-info .title {
+            color: var(--spacex-red);
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .founder-info .bio {
+            color: var(--spacex-gray);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .sdn-biz-section {
+            background-color: var(--container-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .sdn-biz-section h3 {
+            color: var(--spacex-white);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sdn-biz-section p {
+            color: var(--spacex-gray);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature {
+            background-color: var(--container-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .feature:hover {
+            border-color: var(--spacex-red);
+            transform: translateY(-5px);
+        }
+
+        .feature h4 {
+            color: var(--spacex-white);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feature p {
+            color: var(--spacex-gray);
+            font-size: 1rem;
+        }
+
+        .chat-history {
+            background: linear-gradient(135deg, var(--container-bg), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-history::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-history::-webkit-scrollbar-track {
+            background: var(--container-bg);
+            border-radius: 4px;
+        }
+
+        .chat-history::-webkit-scrollbar-thumb {
+            background: var(--spacex-red);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .chat-history::-webkit-scrollbar-thumb:hover {
+            background: #cc0000;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, var(--container-bg), rgba(255, 255, 255, 0.1));
+            border: 1px solid var(--border-color);
+            color: var(--heading-color);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--spacex-red);
+            color: var(--spacex-red);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(255, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-container, .profile-container {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+                min-height: 100vh;
+                overflow-x: hidden;
+            }
+
+            .container {
+                padding: 0;
+                width: 100%;
+            }
+
+            .nav-bar {
+                flex-direction: column;
+                gap: 0.8rem;
+                text-align: center;
+                padding: 0.8rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.8rem;
+                width: 100%;
+            }
+
+            .nav-link {
+                display: block;
+                padding: 0.5rem;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+                display: block;
+            }
+
+            .chat-container {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .chat-container h2 {
+                font-size: 1.3rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .chat-container p {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+
+            .chat-input {
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 0.8rem;
+            }
+
+            .chat-input input {
+                width: 100%;
+                padding: 0.8rem;
+            }
+
+            .chat-input button {
+                width: 100%;
+                padding: 0.8rem;
+            }
+
+            .profile-container {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .profile-image {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 1rem;
+            }
+
+            .profile-header h2 {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .profile-header p {
+                font-size: 0.9rem;
+            }
+
+            .social-links {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .social-link {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .theme-toggle {
+                top: 0.5rem;
+                right: 0.5rem;
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .chat-history {
+                max-height: 200px;
+                padding: 0.8rem;
+                margin-bottom: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.3rem;
+            }
+
+            .nav-bar {
+                padding: 0.6rem;
+            }
+
+            .logo {
+                font-size: 1.4rem;
+            }
+
+            .chat-container h2 {
+                font-size: 1.2rem;
+            }
+
+            .profile-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .social-link {
+                padding: 0.6rem;
+                font-size: 0.8rem;
+            }
+
+            .theme-toggle {
+                top: 0.3rem;
+                right: 0.3rem;
+                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
+            }
+
+            .chat-history {
+                max-height: 180px;
+                padding: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
+        <nav class="nav-bar">
+            <a href="SD.html" class="logo">SHUTTERDOME®</a>
+            <div class="nav-links">
+                <a href="SD.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="chat.html" class="nav-link">ChatGPT</a>
+            </div>
+        </nav>
+
+        <div class="chat-container">
+            <h2>Let's create your profile</h2>
+            <p>Tell me about yourself and I'll find your social media presence</p>
+            <div class="chat-input">
+                <input type="text" placeholder="Type your message here...">
+                <button>Send</button>
+            </div>
+        </div>
+
+        <div class="profile-container">
+            <div class="profile-header">
+                <img src="https://via.placeholder.com/120" alt="Profile" class="profile-image">
+                <h2>Your Name</h2>
+                <p>Your Bio</p>
+            </div>
+            
+            <div class="social-links">
+                <a href="#" class="social-link">Instagram</a>
+                <a href="#" class="social-link">Twitter</a>
+                <a href="#" class="social-link">LinkedIn</a>
+                <a href="#" class="social-link">GitHub</a>
+                <a href="#" class="social-link">YouTube</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        // Check for saved theme preference or use system preference
+        const currentTheme = localStorage.getItem('theme') || 
+            (prefersDarkScheme.matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        updateThemeButton(currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton(newTheme);
+        });
+
+        function updateThemeButton(theme) {
+            themeToggle.textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+
+        const input = document.querySelector('input');
+        const sendButton = document.querySelector('button');
+        const chatContainer = document.querySelector('.chat-container');
+        const profileName = document.querySelector('.profile-header h2');
+        const profileBio = document.querySelector('.profile-header p');
+        const socialLinks = document.querySelectorAll('.social-link');
+
+        // Create chat history container
+        const chatHistory = document.createElement('div');
+        chatHistory.className = 'chat-history';
+        chatHistory.style.marginBottom = '1rem';
+        chatHistory.style.maxHeight = '200px';
+        chatHistory.style.overflowY = 'auto';
+        chatContainer.insertBefore(chatHistory, document.querySelector('.chat-input'));
+
+        // Add message to chat history
+        function addMessage(message, isUser = true) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.padding = '0.5rem';
+            messageDiv.style.marginBottom = '0.5rem';
+            messageDiv.style.borderRadius = '6px';
+            messageDiv.style.backgroundColor = isUser ? 'white' : 'var(--vintage-green)';
+            messageDiv.style.color = isUser ? 'black' : 'white';
+            messageDiv.textContent = message;
+            chatHistory.appendChild(messageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        // Update profile information
+        function updateProfile(name, bio) {
+            profileName.textContent = name;
+            profileBio.textContent = bio;
+        }
+
+        // Process user input and generate response
+        function processUserInput(message) {
+            // Simple response logic - can be enhanced with more sophisticated AI
+            const responses = {
+                name: "I'll help you create your profile. What's your name?",
+                bio: "Great! Now, tell me a bit about yourself for your bio.",
+                social: "I'll help you find your social media profiles. Which platforms are you on?"
+            };
+
+            if (message.toLowerCase().includes('hello') || message.toLowerCase().includes('hi')) {
+                return responses.name;
+            } else if (message.length < 20) {
+                updateProfile(message, "Loading bio...");
+                return responses.bio;
+            } else if (message.length < 100) {
+                updateProfile(profileName.textContent, message);
+                return responses.social;
+            } else {
+                return "I've updated your profile! You can now click on the social media links to add your profiles.";
+            }
+        }
+
+        // Handle social media link clicks
+        socialLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const platform = link.textContent;
+                const url = prompt(`Enter your ${platform} profile URL:`);
+                if (url) {
+                    link.href = url;
+                    link.style.backgroundColor = 'var(--vintage-green)';
+                    link.style.color = 'white';
+                }
+            });
+        });
+
+        // Handle send button click
+        sendButton.addEventListener('click', () => {
+            const message = input.value.trim();
+            if (message) {
+                addMessage(message);
+                const response = processUserInput(message);
+                setTimeout(() => addMessage(response, false), 500);
+                input.value = '';
+            }
+        });
+
+        // Handle enter key
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        // Add initial greeting
+        setTimeout(() => {
+            addMessage("Hello! I'm here to help you create your profile. How can I assist you today?", false);
+        }, 500);
+    </script>
+</body>
+</html>
